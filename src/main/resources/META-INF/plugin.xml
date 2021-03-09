@@ -1,0 +1,31 @@
+<idea-plugin>
+    <id>com.wishes.idea.seat</id>
+    <name>休息提示小助手</name>
+    <vendor email="1098832322@qq.com" url="http://wishes-blog.cn">Wishes丶</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="com.wishes.idea.seat.service.AlertService"
+                            serviceImplementation="com.wishes.idea.seat.service.impl.AlertServiceImpl"/>
+        <applicationService serviceInterface="com.wishes.idea.seat.service.ScheduledService"
+                            serviceImplementation="com.wishes.idea.seat.service.impl.ScheduledServiceImpl"/>
+    </extensions>
+    <application-components>
+        <component>
+            <implementation-class>com.wishes.idea.seat.compontent.SampleDialogWrapper</implementation-class>
+        </component>
+    </application-components>
+    <actions>
+        <action id="Assistant.Setting" class="com.wishes.idea.seat.action.SettingAction" text="Assistant Setting" description="休息提示小助手设置">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt c"/>
+        </action>
+        <action id="com.wishes.idea.seat.action.StopAction" class="com.wishes.idea.seat.action.StopAction" text="Assistant Stop"
+                description="让小助手停止提示">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt s"/>
+        </action>
+    </actions>
+
+</idea-plugin>

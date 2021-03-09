@@ -1,0 +1,68 @@
+plugins {
+    // 1. 编译, 测试插件 (Java, Groovy,Scala, War 等)
+    id 'java'
+    id "io.freefair.lombok" version "5.3.0"
+    // Java 是Gradle的核心插件, 是内置的, 内置插件不需要配置依赖路径
+    id 'org.jetbrains.intellij' version '0.6.5'
+}
+
+group group
+version version
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+repositories {
+    mavenCentral()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+}
+
+intellij {
+    // 在 2019.2 以上版本添加生效
+    // plugins 'java'
+    pluginName name
+    version ideaVersion
+    // 插件生成的临时文件的地址，可以省略
+    sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
+    updateSinceUntilBuild = true
+}
+
+lombok {
+    version = "1.18.18"
+    generateLombokConfig.enabled = false
+}
+
+buildPlugin {
+    doLast {
+        copy {
+            from 'build/distributions'
+            include "${rootProject.name}-${project.version}.zip"
+            into "/Users/dong4j/Downloads"
+        }
+    }
+}
+
+patchPluginXml {
+    version "${project.version}"
+    sinceBuild(pluginSinceBuild)
+    untilBuild(pluginUntilBuild)
+    pluginDescription(file('includes/pluginDescription.html').text)
+    changeNotes(file('includes/pluginChanges.html').text)
+}
+
+publishPlugin {
+    token = System.getenv("publishToken")
+    channels publishChannels
+}
+
+// 声明依赖使用下面的闭包
+dependencies {
+    testImplementation(
+            'junit:junit:4.13',
+            'org.mockito:mockito-core:3.3.3',
+            'org.powermock:powermock-api-mockito2:2.0.5',
+            'org.powermock:powermock-core:2.0.5'
+    )
+}
